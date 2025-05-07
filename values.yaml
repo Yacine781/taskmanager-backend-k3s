@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: yacine78/taskmanager
-  tag: 22
+  tag: 23
   pullPolicy: IfNotPresent
 
 service:
