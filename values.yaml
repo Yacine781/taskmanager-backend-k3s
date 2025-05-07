@@ -1,0 +1,23 @@
+replicaCount: 2
+
+image:
+  repository: yacine78/taskmanager
+  tag: 19
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+env:
+  DB_HOST: galeradb-mariadb-galera.default.svc.cluster.local
+  DB_USER: user
+  DB_NAME: taskmanager
+
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 250m
+  limits:
+    memory: 512Mi
+    cpu: 500m

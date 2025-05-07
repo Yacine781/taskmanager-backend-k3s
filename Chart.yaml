@@ -1,0 +1,5 @@
+apiVersion: v2
+name: taskmanager-backend
+version: 0.1.0
+appVersion: "1.0.0"
+description: Un chart Helm pour déployer le backend de l'application TaskManagerApp
