@@ -38,8 +38,8 @@ resources:
 
 # Image Docker pour le backend de l'application
 image:
-  repository: dnais1210/taskshare  # Nom de l'image Docker pour le backend
-  tag: latest                              # Version de l'image
+  repository: yacine78/taskmanager  # Nom de l'image Docker pour le backend
+  tag: 24                             # Version de l'image
   pullPolicy: IfNotPresent                 # Politique de téléchargement de l'image
 
 # Configuration du service backend
