@@ -1,19 +1,33 @@
-replicaCount: 2
+auth:
+  rootPassword: rootpassword        # Mot de passe root de MariaDB
+  database: taskmanager            # Nom de la base de données
+  username: user                   # Nom d'utilisateur pour la DB
+  password: password               # Mot de passe de l'utilisateur DB
 
-image:
-  repository: yacine78/taskmanager
-  tag: 23
-  pullPolicy: IfNotPresent
+# Configuration de Galera MariaDB
+galera:
+  bootstrap:
+    bootstrapFromNode: "my-galera-mariadb-galera-0"  # Le nœud à partir duquel la réplication doit commencer
 
-service:
-  type: ClusterIP
-  port: 80
+# Configuration des volumes persistants
+primary:
+  persistence:
+    enabled: true
+    size: 5Gi                      # Taille du volume pour le nœud primaire
 
-env:
-  DB_HOST: galeradb-mariadb-galera.default.svc.cluster.local
-  DB_USER: user
-  DB_NAME: taskmanager
+secondary:
+  replicaCount: 2
+  persistence:
+    enabled: true
+    size: 5Gi                      # Taille des volumes pour les réplicas secondaires
 
+# Configuration du service MariaDB
+#service:
+#  type: ClusterIP                  # Type de service pour MariaDB
+#  ports:
+#    mysql: 3306                     # Port d'accès à MariaDB
+
+# Configuration des ressources pour l'application backend
 resources:
   requests:
     memory: 256Mi
@@ -21,3 +35,21 @@ resources:
   limits:
     memory: 512Mi
     cpu: 500m
+
+# Image Docker pour le backend de l'application
+image:
+  repository: dnais1210/taskshare  # Nom de l'image Docker pour le backend
+  tag: latest                              # Version de l'image
+  pullPolicy: IfNotPresent                 # Politique de téléchargement de l'image
+
+# Configuration du service backend
+service:
+  type: LoadBalancer                # Utilisation de LoadBalancer avec MetalLB
+  port: 80                           # Port d'accès au service backend
+
+# Variables d'environnement pour la connexion à la base de données
+env:
+  DB_HOST: my-galera-mariadb-galera  # Nom du service MariaDB
+  DB_USER: user                     # Utilisateur DB
+  DB_PASSWORD: password             # Mot de passe DB
+  DB_NAME: taskmanager              # Nom de la base de données

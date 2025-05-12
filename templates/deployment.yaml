@@ -5,7 +5,7 @@ metadata:
   labels:
     app: {{ .Chart.Name }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.replicaCount }}  # Nombre de réplicas (instances) du backend
   selector:
     matchLabels:
       app: {{ .Chart.Name }}
@@ -16,19 +16,16 @@ spec:
     spec:
       containers:
         - name: backend
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"  # Référence à l'image Docker
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: 3000
+            - containerPort: 5000          # Port sur lequel l'application backend écoute
           env:
             - name: DB_HOST
-              value: {{ .Values.env.DB_HOST }}
+              value: {{ .Values.env.DB_HOST }}  # Variable d'environnement DB_HOST
             - name: DB_USER
-              value: {{ .Values.env.DB_USER }}
-            - name: DB_NAME
-              value: {{ .Values.env.DB_NAME }}
+              value: {{ .Values.env.DB_USER }}  # Variable d'environnement DB_USER
             - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: galeradb-mariadb-galera
-                  key: mariadb-password
+              value: {{ .Values.env.DB_PASSWORD }}  # Variable d'environnement DB_PASSWORD
+            - name: DB_NAME
+              value: {{ .Values.env.DB_NAME }}  # Variable d'environnement DB_NAME
