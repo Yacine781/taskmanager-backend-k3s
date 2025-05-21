@@ -5,7 +5,7 @@ metadata:
   labels:
     app: {{ .Chart.Name }}
 spec:
-  replicas: {{ .Values.replicaCount }}  # Nombre de réplicas (instances) du backend
+  replicas: {{ .Values.replicaCount | default 1 }}
   selector:
     matchLabels:
       app: {{ .Chart.Name }}
@@ -16,16 +16,31 @@ spec:
     spec:
       containers:
         - name: backend
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"  # Référence à l'image Docker
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: 5000          # Port sur lequel l'application backend écoute
+            - name: http
+              containerPort: 5000
           env:
             - name: DB_HOST
-              value: {{ .Values.env.DB_HOST }}  # Variable d'environnement DB_HOST
+              value: {{ .Values.env.DB_HOST | quote }}
             - name: DB_USER
-              value: {{ .Values.env.DB_USER }}  # Variable d'environnement DB_USER
+              value: {{ .Values.env.DB_USER | quote }}
             - name: DB_PASSWORD
-              value: {{ .Values.env.DB_PASSWORD }}  # Variable d'environnement DB_PASSWORD
+              value: {{ .Values.env.DB_PASSWORD | quote }}
             - name: DB_NAME
-              value: {{ .Values.env.DB_NAME }}  # Variable d'environnement DB_NAME
+              value: {{ .Values.env.DB_NAME | quote }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10

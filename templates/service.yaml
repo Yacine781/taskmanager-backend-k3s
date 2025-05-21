@@ -2,10 +2,13 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
 spec:
-  type: {{ .Values.service.type }}  # Type de service LoadBalancer pour utiliser MetalLB
+  type: {{ .Values.service.type }}
   selector:
-    app: {{ .Chart.Name }}  # Sélecteur pour lier le service au déploiement
+    app: {{ .Chart.Name }}
   ports:
-    - port: {{ .Values.service.port }}  # Port externe du service (80)
-      targetPort: 5000       # Port interne sur lequel l'application écoute
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: 5000
