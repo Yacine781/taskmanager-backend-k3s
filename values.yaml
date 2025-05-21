@@ -42,7 +42,7 @@ resources:
 image:
   repository: yacine78/taskmanager  # Nom de l'image Docker pour le backend
   tag: latest                              # Version de l'image
-  pullPolicy: IfNotPresent                 # Politique de téléchargement de l'image
+  pullPolicy: Always                 # Politique de téléchargement de l'image
 
 # Configuration du service backend
 service:
